@@ -63,6 +63,7 @@ export default function SiteNav() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
+    <>
     <nav
       className={`sticky top-0 z-50 transition-[padding,background-color,border-color,box-shadow] duration-[400ms] ease-in-out ${
         scrolled
@@ -110,21 +111,25 @@ export default function SiteNav() {
           <span className="h-[2px] w-[24px] bg-espresso" />
         </button>
       </div>
+    </nav>
 
-      {menuOpen && (
-        <button
-          type="button"
-          aria-label="Close menu"
-          tabIndex={-1}
-          onClick={closeMenu}
-          className="fixed inset-0 z-[100] bg-espresso/40 min-[680px]:hidden"
-        />
-      )}
+    {/* Mobile drawer rendered OUTSIDE the nav so backdrop-blur on the nav
+        does not trap the fixed positioning inside it. */}
+    <div className="min-[680px]:hidden">
+      <button
+        type="button"
+        aria-label="Close menu"
+        tabIndex={menuOpen ? 0 : -1}
+        onClick={closeMenu}
+        className={`fixed inset-0 z-[100] bg-espresso/40 transition-opacity duration-[300ms] ${
+          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
 
       <div
         aria-hidden={!menuOpen}
-        className={`fixed inset-y-0 right-0 z-[100] flex w-[78%] max-w-[320px] flex-col items-center justify-center gap-[2.2rem] border-l border-bean/15 bg-cream transition-transform duration-[400ms] ease-in-out min-[680px]:hidden ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-y-0 right-0 z-[101] flex w-[78%] max-w-[320px] flex-col items-center justify-center gap-[2.2rem] border-l border-bean/15 bg-cream shadow-2xl transition-transform duration-[400ms] ease-in-out ${
+          menuOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
         }`}
       >
         {LINKS.map((link) => (
@@ -147,6 +152,7 @@ export default function SiteNav() {
           Enquire
         </a>
       </div>
-    </nav>
+    </div>
+    </>
   );
 }
